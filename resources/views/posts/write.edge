@@ -1,0 +1,31 @@
+@layout('layouts/default')
+
+@section('content')
+<div class="container my-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <h3>Write a post</h3>
+      <p>
+        <strong>Do not include your personal information</strong>
+        <br>
+        You can use <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">markdown syntax<a> in content
+        <br>
+        The password is not required but you can't edit or delete the post later
+      </p>
+      <form action="{{route('post.store')}}" method="post">
+        {{ csrfField() }}
+        <div class="row">
+          <div class="col-8 pr-1">
+            <input type="text" name="title" class="form-control mb-1" placeholder="Title" maxlength="100">
+          </div>
+          <div class="col-4 pl-0">
+            <input type="password" name="password" class="form-control mb-1" placeholder="Password (not required)" minlength="16" maxlength="100">
+          </div>
+        </div>
+        <textarea name="content" rows="10" class="form-control mb-3" placeholder="Put your content here" required maxlength="10000"></textarea>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+@endsection

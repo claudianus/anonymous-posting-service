@@ -1,0 +1,13 @@
+@layout('layouts/default')
+
+@section('content')
+<div class="container px-0">
+  <div class="jumbotron">
+    <h1 class="display-4">Anonymous Posting Service</h1>
+    <p class="lead">This website helps you publish posts anonymously</p>
+    <hr class="my-4">
+    <a class="btn btn-primary btn-lg" href="{{route('write')}}" role="button">Go to write a post</a>
+    <a class="btn btn-secondary btn-lg" href="{{route('posts')}}" role="button">Go to posts</a>
+  </div>
+</div>
+@endsection

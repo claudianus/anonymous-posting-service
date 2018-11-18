@@ -1,0 +1,58 @@
+@layout('layouts/default')
+
+@section('content')
+<div class="container my-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      @if(flashMessage('success'))
+        <div class="alert alert-success" role="alert">
+          {{ flashMessage('success') }}
+        </div>
+      @endif
+      @if(flashMessage('error'))
+        <div class="alert alert-danger" role="alert">
+          {{ flashMessage('error') }}
+        </div>
+      @endif
+      @if(postPagi.data.length > 0)
+        <table class="table table-sm table-hover table-fixed">
+          <caption>Total: {{postPagi.total}}</caption>
+          <thead>
+            <tr>
+              <th style="width: 70%;">Title</th>
+              <th style="width: 30%;">Created at</th>
+            </tr>
+          </thead>
+          <tbody>
+            @each(post in postPagi.data)
+              <tr>
+                <td class="text-truncate"><a href="{{route('view', { secureId: post.secureId })}}">{{post.title}}</a></td>
+                <td class="text-truncate">{{ago(post.created_at)}}</td>
+              </tr>
+            @endeach
+          </tbody>
+        </table>
+        <nav aria-label="pagibar">
+          <ul class="pagination justify-content-center">
+            <li class="page-item{{postPagi.page <= 1 ? ' disabled' : ''}}">
+              <a class="page-link" href="{{ route('posts') + '?page=' + (postPagi.page - 1) }}" tabindex="-1">Previous</a>
+            </li>
+            @each(i in range(postPagi.page-5, postPagi.page+5))
+              @if(i > 0 && i <= postPagi.lastPage)
+                <li class="page-item{{i===postPagi.page ? ' active' : ''}}"><a class="page-link" href="{{ route('posts') + '?page=' + i }}">{{i}}</a></li>
+              @endif
+            @endeach
+            <li class="page-item{{postPagi.page === postPagi.lastPage ? ' disabled' : ''}}">
+              <a class="page-link" href="{{ route('posts') + '?page=' + (postPagi.page + 1) }}">Next</a>
+            </li>
+          </ul>
+        </nav>
+      @else
+        <div class="alert alert-info text-center" role="alert">
+          There is no posts
+        </div>
+      @endif
+    </div>
+  </div>
+</div>
+@endsection

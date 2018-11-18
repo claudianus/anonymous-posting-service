@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+* {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.text-wrap {
+  word-break: break-word;
+}
+
+.table-fixed {
+  table-layout: fixed;
+}
+
+.text-small {
+  font-size: 0.9rem;
+}
+
+.text-smaller {
+  font-size: 0.8rem;
+}
+
+.btn-smaller {
+  padding: .01rem .3rem;
+  font-size: .8rem;
+  line-height: 1.5;
+  border-radius: .2rem;
+}
+
+.comment:hover {
+  background-color: whitesmoke;
+}

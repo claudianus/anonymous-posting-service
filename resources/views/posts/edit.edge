@@ -1,0 +1,36 @@
+@layout('layouts/default')
+
+@section('content')
+<div class="container my-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      @if(flashMessage('error'))
+        <div class="alert alert-danger" role="alert">
+          {{ flashMessage('error') }}
+        </div>
+      @endif
+      <h3>Edit a post</h3>
+      <p>
+        <strong>Do not include your personal information</strong>
+        <br>
+        You can use <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">markdown syntax<a> in content
+        <br>
+        The password is required
+      </p>
+      <form action="{{route('post.update', {secureId:post.secureId})}}?_method=put" method="post">
+        {{ csrfField() }}
+        <div class="row">
+          <div class="col-8 pr-1">
+            <input type="text" name="title" class="form-control mb-1" placeholder="Title" minlength="1" value="{{post.title}}" required>
+          </div>
+          <div class="col-4 pl-0">
+            <input type="password" name="password" class="form-control mb-1" placeholder="Password" minlength="16" maxlength="100" required>
+          </div>
+        </div>
+        <textarea name="content" rows="10" class="form-control mb-3" placeholder="Put your content here" required maxlength="3000">{{post.content}}</textarea>
+        <button type="submit" class="btn btn-primary">Edit</button>
+      </form>
+    </div>
+  </div>
+</div>
+@endsection

@@ -1,0 +1,94 @@
+@layout('layouts/default')
+
+@section('content')
+<div class="container mt-4 mb-5 text-wrap">
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      @if(flashMessage('success'))
+        <div class="alert alert-success" role="alert">
+          {{ flashMessage('success') }}
+        </div>
+      @endif
+      <div>
+        <h1 class="mb-0">{{ xss(post.title) }}</h1>
+        <ul class="list-inline mb-1 text-small">
+          <li class="list-inline-item">Created {{ago(post.created_at)}}</li>
+          <li class="list-inline-item">Updated {{ago(post.updated_at)}}</li>
+          <li class="list-inline-item">{{post.views}} Views</li>
+          <li class="list-inline-item">
+            <a href="{{route('edit', { secureId: post.secureId })}}" class="btn btn-primary btn-sm">Edit</a>
+            <a href="{{route('delete', { secureId: post.secureId })}}" class="btn btn-danger btn-sm">Delete</a>
+          </li>
+        </ul>
+        <hr class="">
+        <div class="markdown-body">
+          {{{ marked(xss(post.content)) }}}
+        </div>
+      </div>
+      <hr>
+      <div>
+        <form class="mb-4" action="{{route('comment.store', {postSecureId:post.secureId})}}" method="post">
+          {{ csrfField() }}
+          <textarea name="content" rows="2" class="form-control mb-1" placeholder="Put your comment" minlength="1" maxlength="3000" required></textarea>
+          <div class="input-group">
+            <input name="password" type="password" class="form-control" placeholder="Password (not required)" minlength="16" maxlength="100">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+            </div>
+          </div>
+        </form>
+        <div id="comments">
+          <h4>Comments ({{commentPagi.total}})</h4>
+          @if(flashMessage('comment_success'))
+            <div class="alert alert-success" role="alert">
+              {{ flashMessage('comment_success') }}
+            </div>
+          @endif
+          @if(flashMessage('comment_error'))
+            <div class="alert alert-success" role="alert">
+              {{ flashMessage('comment_error') }}
+            </div>
+          @endif
+          @if(commentPagi.data.length > 0)
+            @each(comment in commentPagi.data)
+              <hr class="my-0">
+              <div class="comment py-1">
+                <ul class="list-inline mb-0 text-smaller">
+                  <li class="list-inline-item">Created {{ago(comment.created_at)}}</li>
+                  <li class="list-inline-item">Updated {{ago(comment.updated_at)}}</li>
+                  <li class="list-inline-item">
+                    <a href="{{route('comment.edit', { postSecureId: post.secureId, commentId: comment.id })}}" class="btn btn-primary btn-smaller">Edit</a>
+                    <a href="{{route('comment.delete', { postSecureId: post.secureId, commentId: comment.id })}}" class="btn btn-danger btn-smaller">Delete</a>
+                  </li>
+                </ul>
+                <div class="markdown-body mt-1">
+                  {{{marked(xss(comment.content))}}}
+                </div>
+              </div>
+            @endeach
+            <nav aria-label="pagibar" class="mt-3">
+              <ul class="pagination justify-content-center">
+                <li class="page-item{{commentPagi.page <= 1 ? ' disabled' : ''}}">
+                  <a class="page-link" href="{{ route('view', {secureId: post.secureId}) + '?page=' + (commentPagi.page - 1) + '#comments' }}" tabindex="-1">Previous</a>
+                </li>
+                @each(i in range(commentPagi.page-5, commentPagi.page+5))
+                  @if(i > 0 && i <= commentPagi.lastPage)
+                    <li class="page-item{{i===commentPagi.page ? ' active' : ''}}"><a class="page-link" href="{{ route('view', {secureId: post.secureId}) + '?page=' + i + '#comments' }}">{{i}}</a></li>
+                  @endif
+                @endeach
+                <li class="page-item{{commentPagi.page === commentPagi.lastPage ? ' disabled' : ''}}">
+                  <a class="page-link" href="{{ route('view', {secureId: post.secureId}) + '?page=' + (commentPagi.page + 1) + '#comments' }}">Next</a>
+                </li>
+              </ul>
+            </nav>
+          @else
+            <div class="alert alert-info text-center" role="alert">
+              There is no comments
+            </div>
+          @endif
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection

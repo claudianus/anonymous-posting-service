@@ -1,0 +1,23 @@
+@layout('layouts/default')
+
+@section('content')
+<div class="container my-4 text-wrap">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      @if(flashMessage('error'))
+        <div class="alert alert-danger" role="alert">
+          {{ flashMessage('error') }}
+        </div>
+      @endif
+      <h1>Edit a comment</h1>
+      {{--  <h3>{{post.title}}</h3>  --}}
+      <form action="{{route('comment.update', { postSecureId: post.secureId, commentId: comment.id })}}?_method=put" method="post">
+        {{ csrfField() }}
+        <input type="password" name="password" class="form-control mb-1" placeholder="Password" minlength="16" maxlength="100" required>
+        <textarea name="content" rows="3" class="form-control mb-2" placeholder="Put your comment" minlength="1" maxlength="3000" required>{{comment.content}}</textarea>
+        <button type="submit" class="btn btn-danger mt-1">Edit</button>
+      </form>
+    </div>
+  </div>
+</div>
+@endsection
