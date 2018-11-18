@@ -5,6 +5,7 @@ const Post = use('App/Models/Post')
 const Hash = use('Hash')
 const crypto = use('crypto')
 const Env = use('Env')
+const Route = use('Route')
 
 class CommentController {
   async edit({view, params, session, response}) {
@@ -40,7 +41,7 @@ class CommentController {
     newComment.password = body.password ? await Hash.make(crypto.createHash('sha256').update(body.password).digest('hex')) : null
     await newComment.save()
     session.flash({comment_success:"Posted!"})
-    return response.route('view', {secureId: params.postSecureId})
+    return response.redirect(`${Route.url('view', {secureId: params.postSecureId})}#comments`)
   }
 
   async update({request, response, params, session}) {
@@ -60,7 +61,7 @@ class CommentController {
     comment.content = body.content
     await comment.save()
     session.flash({comment_success:"Updated!"})
-    return response.route('view', {secureId: params.postSecureId})
+    return response.redirect(`${Route.url('view', {secureId: params.postSecureId})}#comments`)
   }
 
   async destroy({request, response, params, session}) {
@@ -79,7 +80,7 @@ class CommentController {
     }
     await comment.delete()
     session.flash({comment_success:"Deleted!"})
-    return response.route('view', {secureId: params.postSecureId})
+    return response.redirect(`${Route.url('view', {secureId: params.postSecureId})}#comments`)
   }
 
 }
