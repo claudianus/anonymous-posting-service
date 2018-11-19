@@ -9,7 +9,7 @@
           {{ flashMessage('error') }}
         </div>
       @endif
-      <h1>Delete a post</h1>
+      <h3>Delete a post</h3>
       <h3 class="mb-2">{{post.title}}</h3>
       <form action="{{route('post.destroy', { secureId: post.secureId })}}?_method=delete" method="post">
         {{ csrfField() }}

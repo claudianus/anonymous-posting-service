@@ -9,22 +9,22 @@ const Route = use('Route')
 
 class CommentController {
   async edit({view, params, session, response}) {
-    const comment = await Comment.find(params.commentId)
+    const comment = await Comment.findBy('secureId', params.commentSecureId)
     if(!comment) {
       session.flash({error:"The comment doesn't exist"})
-      return response.route('view', {secureId: params.postSecureId})
+      return response.redirect(`${Route.url('view', {secureId: params.postSecureId})}#comments`)
     }
-    const post = await Post.find(comment.post_id)
+    const post = await comment.post().fetch()
     return view.render('comments.edit', {post, comment})
   }
 
   async delete({view, params, session, response}) {
-    const comment = await Comment.find(params.commentId)
+    const comment = await Comment.findBy('secureId', params.commentSecureId)
     if(!comment) {
       session.flash({error:"The comment doesn't exist"})
-      return response.route('view', {secureId: params.postSecureId})
+      return response.redirect(`${Route.url('view', {secureId: params.postSecureId})}#comments`)
     }
-    const post = await Post.find(comment.post_id)
+    const post = await comment.post().fetch()
     return view.render('comments.delete', {post, comment})
   }
 
@@ -38,7 +38,7 @@ class CommentController {
     const newComment = new Comment
     newComment.post_id = post.id
     if(body.content) newComment.content = body.content
-    newComment.password = body.password ? await Hash.make(crypto.createHash('sha256').update(body.password).digest('hex')) : null
+    newComment.password = body.password
     await newComment.save()
     session.flash({comment_success:"Posted!"})
     return response.redirect(`${Route.url('view', {secureId: params.postSecureId})}#comments`)
@@ -46,16 +46,16 @@ class CommentController {
 
   async update({request, response, params, session}) {
     const body = request.post()
-    const comment = await Comment.find(params.commentId)
+    const comment = await Comment.findBy('secureId', params.commentSecureId)
     if(!comment) {
       session.flash({comment_error:"The comment doesn't exist"})
-      return response.route('view', {secureId: params.postSecureId})
+      return response.redirect(`${Route.url('view', {secureId: params.postSecureId})}#comments`)
     }
     if(body.password !== Env.get('MASTER_PASSWORD')) {
       const isSame = await Hash.verify(crypto.createHash('sha256').update(body.password).digest('hex'), comment.password)
       if(!isSame) {
         session.flash({ error: "The password doesn't match" })
-        return response.route('comment.edit', { postSecureId: params.postSecureId, commentId: comment.id })
+        return response.route('comment.edit', { postSecureId: params.postSecureId, commentSecureId: comment.secureId })
       }
     }
     comment.content = body.content
@@ -66,16 +66,16 @@ class CommentController {
 
   async destroy({request, response, params, session}) {
     const body = request.post()
-    const comment = await Comment.find(params.commentId)
+    const comment = await Comment.findBy('secureId', params.commentSecureId)
     if(!comment) {
       session.flash({comment_error:"The comment doesn't exist"})
-      return response.route('view', {secureId: params.postSecureId})
+      return response.redirect(`${Route.url('view', {secureId: params.postSecureId})}#comments`)
     }
     if(body.password !== Env.get('MASTER_PASSWORD')) {
       const isSame = await Hash.verify(crypto.createHash('sha256').update(body.password).digest('hex'), comment.password)
       if(!isSame) {
         session.flash({error: "The password doesn't match" })
-        return response.route('comment.delete', { postSecureId: params.postSecureId, commentId: comment.id })
+        return response.route('comment.delete', { postSecureId: params.postSecureId, commentSecureId: comment.secureId })
       }
     }
     await comment.delete()

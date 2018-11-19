@@ -14,13 +14,13 @@
           {{ flashMessage('error') }}
         </div>
       @endif
+      <h3>Posts ({{postPagi.total}})</h3>
       @if(postPagi.data.length > 0)
         <table class="table table-sm table-hover table-fixed">
-          <caption>Total: {{postPagi.total}}</caption>
           <thead>
             <tr>
               <th style="width: 70%;">Title</th>
-              <th style="width: 30%;">Created at</th>
+              <th style="width: 30%;">Created</th>
             </tr>
           </thead>
           <tbody>

@@ -29,9 +29,9 @@ Route.put('/post/:secureId', 'PostController.update').as('post.update')
 Route.delete('/post/:secureId', 'PostController.destroy').as('post.destroy')
 
 
-Route.get('/posts/:postSecureId/comments/:commentId/edit', 'CommentController.edit').as('comment.edit')
-Route.get('/posts/:postSecureId/comments/:commentId/delete', 'CommentController.delete').as('comment.delete')
+Route.get('/posts/:postSecureId/comments/:commentSecureId/edit', 'CommentController.edit').as('comment.edit')
+Route.get('/posts/:postSecureId/comments/:commentSecureId/delete', 'CommentController.delete').as('comment.delete')
 
 Route.post('/post/:postSecureId/comment', 'CommentController.store').as('comment.store')
-Route.put('/post/:postSecureId/comment/:commentId', 'CommentController.update').as('comment.update')
-Route.delete('/post/:postSecureId/comment/:commentId', 'CommentController.destroy').as('comment.destroy')
+Route.put('/post/:postSecureId/comment/:commentSecureId', 'CommentController.update').as('comment.update')
+Route.delete('/post/:postSecureId/comment/:commentSecureId', 'CommentController.destroy').as('comment.destroy')

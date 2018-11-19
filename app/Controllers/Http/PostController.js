@@ -1,16 +1,14 @@
 'use strict'
 
 const Post = use('App/Models/Post')
-const Comment = use('App/Models/Comment')
 const Hash = use('Hash')
-const nanoid = use('nanoid')
 const crypto= use('crypto')
 const Env = use('Env')
 
 class PostController {
   async list({view, request, response}) {
     const query = request.get()
-    const postPagi = await Post.query().orderBy('id', 'desc').paginate(query.page, 20)
+    const postPagi = await Post.query().orderBy('id', 'desc').paginate(query.page, 15)
     return view.render('posts/list', {postPagi: postPagi.toJSON()})
   }
 
@@ -45,17 +43,16 @@ class PostController {
     post.views++
     await post.save()
     const query = request.get()
-    const commentPagi = await Comment.query().where('post_id', post.id).orderBy('id', 'desc').paginate(query.page, 20)
+    const commentPagi = await post.comments().orderBy('id', 'desc').paginate(query.page, 10)
     return view.render('posts/view', {post, commentPagi: commentPagi.toJSON()})
   }
 
   async store({request, response, session}) {
     const body = request.post()
     const newPost = new Post
-    newPost.secureId = nanoid()
     if(body.title) newPost.title = body.title
     if(body.content) newPost.content = body.content
-    newPost.password = body.password ? await Hash.make(crypto.createHash('sha256').update(body.password).digest('hex')) : null
+    newPost.password = body.password
     await newPost.save()
     session.flash({ success: "Posted!" })
     return response.route('view', { secureId: newPost.secureId })

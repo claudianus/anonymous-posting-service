@@ -9,7 +9,7 @@
           {{ flashMessage('error') }}
         </div>
       @endif
-      <h1>Delete a comment</h1>
+      <h3>Delete a comment</h3>
       <div>
         <hr class="my-2">
         <ul class="list-inline mb-0 text-smaller">
@@ -21,7 +21,7 @@
         </div>
         <hr>
       </div>
-      <form action="{{route('comment.destroy', { postSecureId: post.secureId, commentId: comment.id })}}?_method=delete" method="post">
+      <form action="{{route('comment.destroy', { postSecureId: post.secureId, commentSecureId: comment.secureId })}}?_method=delete" method="post">
         {{ csrfField() }}
         <input type="password" name="password" class="form-control mb-1" placeholder="Password" minlength="16" maxlength="100" required>
         <button type="submit" class="btn btn-danger mt-1">Delete</button>
