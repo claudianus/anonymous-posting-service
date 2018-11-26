@@ -3,7 +3,7 @@
 const Model = use('Model')
 const Hash = use('Hash')
 const crypto = use('crypto')
-const nanoid = use('nanoid')
+const generate = use('nanoid/generate')
 
 class Post extends Model {
   static boot () {
@@ -11,7 +11,8 @@ class Post extends Model {
 
     this.addHook('beforeCreate', async (instance) => {
       instance.password = instance.password ? await Hash.make(crypto.createHash('sha256').update(instance.password).digest('hex')) : null
-      instance.secureId = nanoid()
+      instance.secureId = generate('0123456789abcdefghijklmnopqrstuvwxyz', 32)
+      instance.content_updated_at = Date.now()
     })
 
     this.addHook('beforeDelete', async (instance) => {

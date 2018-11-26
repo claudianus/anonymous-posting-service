@@ -13,7 +13,7 @@
         <h1 class="mb-0">{{ xss(post.title) }}</h1>
         <ul class="list-inline mb-1 text-small">
           <li class="list-inline-item">Created {{ago(post.created_at)}}</li>
-          <li class="list-inline-item">Updated {{ago(post.updated_at)}}</li>
+          <li class="list-inline-item">Updated {{ago(post.content_updated_at)}}</li>
           <li class="list-inline-item">{{post.views}} Views</li>
           <li class="list-inline-item">
             <a href="{{route('edit', { secureId: post.secureId })}}" class="btn btn-primary btn-sm">Edit</a>

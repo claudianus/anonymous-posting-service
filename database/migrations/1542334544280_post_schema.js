@@ -11,6 +11,7 @@ class PostSchema extends Schema {
       table.string('content').notNullable().defaultTo('No Content')
       table.string('password').nullable()
       table.integer('views').unsigned().notNullable().defaultTo(0)
+      table.datetime('content_updated_at').notNullable()
       table.timestamps()
     })
   }

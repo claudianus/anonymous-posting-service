@@ -40,8 +40,11 @@ class PostController {
       session.flash({ error: "The post doesn't exist" })
       return response.route('posts')
     }
-    post.views++
-    await post.save()
+    if(!session.get(`post.${post.id}.saw`)) {
+      session.put(`post.${post.id}.saw`, true)
+      post.views++
+      await post.save()
+    }
     const query = request.get()
     const commentPagi = await post.comments().orderBy('id', 'desc').paginate(query.page, 10)
     return view.render('posts/view', {post, commentPagi: commentPagi.toJSON()})
@@ -74,6 +77,7 @@ class PostController {
     }
     if(body.title) post.title = body.title
     if(body.content) post.content = body.content
+    post.content_updated_at = Date.now()
     await post.save()
     session.flash({ success: "Updated!" })
     return response.route('view', { secureId: post.secureId })
